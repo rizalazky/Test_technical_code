@@ -6,7 +6,7 @@ This is a simple Flask application.
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/my-flask-app.git
+   git clone https://github.com/rizalazky/Test_technical_code.git
    cd my-flask-app```
 2. **Create a virtual environment**:
     python3 -m venv .venv
