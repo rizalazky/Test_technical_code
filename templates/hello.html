@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello</h1>
+    <input type="number" name="angka" id="angka">
+    <br>
+    <br>
+    <button id="generate-segitiga">generate Segitiga JS</button>
+    <button id="generate-ganjil">generate bilangan ganjil JS</button>
+    <button id="generate-prima">generate bilangan prima JS</button>
+    <br>
+    <br>
+    <button class="ajax-btn" data-type="generate-segitiga">generate Segitiga ajax</button>
+    <button class="ajax-btn" data-type="generate-ganjil">generate bilangan ganjil ajax</button>
+    <button class="ajax-btn" data-type="generate-prima">generate bilangan prima ajax</button>
+
+    <br>
+    <br>
+    <p id="title">Result :</p>
+    <div id="result"></div>
+    <script>
+        const input = document.getElementById('angka')
+        const btnSegitiga = document.getElementById('generate-segitiga')
+        const btnGanjil = document.getElementById('generate-ganjil')
+        const btnPrima = document.getElementById('generate-prima')
+        const ajaxBtn = document.getElementsByClassName('ajax-btn')
+        const resultContainer = document.getElementById('result')
+
+        btnSegitiga.addEventListener('click',function(){
+            let val= input.value
+            if(val == ''){
+                alert('tidak boleh kosong')
+                return false;
+            }
+            let html = '';
+            for (let index = 0; index < val.length; index++) {
+                let suffix ='0'
+                for (let i = 0; i < index; i++) {
+                   suffix += '0'
+                }
+                html += `
+                    <div>
+                        ${val[index]}${suffix}
+                    </div>
+                `
+            }
+            result.innerHTML = html;
+        })
+        btnGanjil.addEventListener('click',function(){
+            let val= input.value
+            getData("generate-ganjil")
+            if(val == ''){
+                alert('tidak boleh kosong')
+                return false;
+            }
+            let html = '';
+            for (let index = 0; index < val; index++) {
+               if(index % 2 > 0){
+                   html += `
+                       <div>
+                           ${index}
+                       </div>
+                   `
+               }
+            }
+            result.innerHTML = html;
+        })
+        btnPrima.addEventListener('click',function(){
+            let val= input.value
+            if(val == ''){
+                alert('tidak boleh kosong')
+                return false;
+            }
+            let html = '';
+            for (let index = 2; index <= val; index++) {
+                let check = true;
+                for (let o = 2; o <= index; o++) {
+                    if(index % o == 0 && o != index){
+                        check =false;
+                        break;
+                    }
+                    
+                }
+               if(check){
+                   html += `
+                       <div>
+                           ${index}
+                       </div>
+                   `
+               }
+            }
+            result.innerHTML = html;
+        })
+
+        async function getData(type){
+           
+            const getResult = await fetch("http://localhost:5000",{
+                method : "POST",
+                headers :{
+                    "Content-Type": "application/json"
+                },
+                body : JSON.stringify({
+                    input : input.value,
+                    type : type
+                })
+            });
+           
+            const result = await getResult.json();
+            return result
+        }
+
+        for (let index = 0; index < ajaxBtn.length; index++) {
+            const element = ajaxBtn[index];
+            element.addEventListener('click',async function(e){
+                if(input.value == ''){
+                    alert('tidak boleh kosong')
+                    return false;
+                }
+                let response =await getData(e.target.dataset.type)
+                let data = response.data
+                console.log(data)
+                let html = ''
+                for (let index = 0; index < data.length; index++) {
+                    html += `
+                           <div>
+                               ${data[index]}
+                           </div>
+                       `
+                }
+                result.innerHTML=html
+            })
+            
+        }
+
+        
+        
+    </script>
+
+</body>
+</html>
